@@ -166,3 +166,24 @@ class ProjectionLayer(nn.Module) :
         x = self.proj(x) 
         return torch.log_softmax(x, dim=-1)
     
+class Transformer(nn.Module) : 
+    def __init__(self, encoder, decoder, src_pos, tg_pos, src_emb, tg_emb, proj) : 
+        super().__init__()
+        self.encoder = encoder
+        self.decoder = decoder
+        self.src_pos = src_pos
+        self.tg_pos = tg_pos
+        self.src_emb = src_emb
+        self.tg_emb = tg_emb
+        self.proj = proj
+    def encode(self, x, src_mask) : 
+        return self.encoder(self.src_pos(self.src_emb(x)), src_mask)
+    
+    def decode(self, x, enc_out, src_mask, tg_mask) : 
+        return self.decoder(self.tg_pos(self.tg_emb(x)), enc_out, src_mask, tg_mask)
+    
+    def project(self, x) : 
+        return self.proj(x)
+
+
+def build_transformer()
